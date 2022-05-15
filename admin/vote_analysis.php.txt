@@ -1,0 +1,311 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+</head>
+
+<body>
+
+<?php
+		//include database connect script
+	include_once("connect.php");
+	
+	//include class that has all the method
+	include_once("../ballot_class.php");
+	
+
+
+	$obj=new ballot;
+	$all=$obj->selectall("voted");
+
+
+
+
+
+?>
+
+<h1>VOTE ANALYSIS</h1>
+
+
+
+//Total Number of Voters registered
+
+$registered="SELECT count(`id`)  AS `registered` FROM `voters`";
+$registered=$obj->sqlQuery($resitered);
+while($row=mysql_fetch_array($registered)){
+$registered=$row['registered'];
+echo "Total number of registered voters: $registered";
+}
+
+
+//Get Total Number of votes casted
+
+$votecasted="SELECT count(`voterid`) AS `votecasted` FROM `voted`";
+
+$votedcasted=$obj->sqlQuery($votecasted);
+while($row=mysql_fetch_array($votecasted)){
+$casted=$row['votecasted'];
+
+echo "Total Number of Votes casted as at". date().": $casted";
+}
+
+
+//total number of voters yet to vote
+
+$yet=$registered-$casted;
+
+echo "$yet, voters have/did not vote as at ". date();	
+
+?>
+
+
+
+
+
+
+
+
+<?php
+$display = 15;
+ // Determine how many pages there are...
+ if (isset($_GET['p']) && is_numeric($_GET
+['p'])) { // Already been determined.
+
+ $pages = $_GET['p'];
+ } else { // Need to determine.
+
+ // Count the number of records:
+ $q = "SELECT * FROM `voted`";
+ $r = mysql_query ($q);
+$records=mysql_num_rows($r);
+if(!$r){echo " could not select for pagination problem";}
+if(empty($r)){echo "the database query is empty";}
+
+
+ // Calculate the number of pages...
+ if ($records > $display) { // More than
+ $pages = ceil ($records/$display);
+ } else {
+$pages = 1;
+ }
+ }
+if (isset($_GET['s']) && is_numeric
+($_GET['s'])) {
+ $start = $_GET['s'];
+ } else {
+ $start = 0;
+ }
+	
+	?>
+	
+
+
+
+
+
+
+	<table border="1">
+    <tr>
+    <th>Name</th>
+    <th>Matric Number</th>
+    <th>Time of Vote</th>
+    <th>Department</th>
+<th>PRESIDENT</th>
+<th>VICE PRESIDENT</th>
+<th>GENERAL SECRETARY</th>
+<th>ASS. GEN SEC</th>
+<th>FIN SEC</th>
+<th>ASS FINSEC</th>
+<th>TREASURER</th>
+<th>ASS TREASURER</th>
+<th>RESEARCH</th>
+<th>PRO1</th>
+<th>PRO2</th>
+
+<th>SPORTS</th>
+<th>SOCIAL</th>
+<th>WELLFARE1</th>
+<th>WELLFARE2</th>
+
+    <th>Vote Casted</th>
+<th>Date-Time</th>
+<th>IP</th>
+    </tr>
+
+<?php while($row=mysql_fetch_array($all)){
+?>	
+    
+    <tr>
+    <td><?php echo $row['name'];?></td>
+    <td><?php echo $row['matric'];?></td>
+    <td><?php echo $row['time'];?></td>
+    <td><?php echo $row['dept'];?></td>
+	 <td><?php 
+$select=$obj->selectAllWhere("pres_single", "id", '{$row['pres']}');
+while($row=mysql_fetch_array($select)){ echo $row['name'];}?></td>
+
+ <td><?php 
+$select=$obj->selectAllWhere("vpres", "id", '{$row['vpres']}');
+while($row=mysql_fetch_array($select)){ echo $row['name'];}?></td>
+
+
+ <td><?php 
+$select=$obj->selectAllWhere("gensec", "id", '{$row['gensec']}');
+while($row=mysql_fetch_array($select)){ echo $row['name'];}?></td>
+
+ <td><?php 
+$select=$obj->selectAllWhere("assgensec", "id", '{$row['assgensec']}');
+while($row=mysql_fetch_array($select)){ echo $row['name'];}?></td>
+
+ <td><?php 
+$select=$obj->selectAllWhere("treasurer", "id", '{$row['treasurer']}');
+while($row=mysql_fetch_array($select)){ echo $row['name'];}?></td>
+
+
+ <td><?php 
+$select=$obj->selectAllWhere("asstreasurer", "id", '{$row['asstreasurer']}');
+while($row=mysql_fetch_array($select)){ echo $row['name'];}?></td>
+
+ <td><?php 
+$select=$obj->selectAllWhere("research", "id", '{$row['research']}');
+while($row=mysql_fetch_array($select)){ echo $row['name'];}?></td>
+
+
+ <td><<?php 
+$select=$obj->selectAllWhere("pro1", "id", '{$row['pro1']}');
+while($row=mysql_fetch_array($select)){ echo $row['name'];}?></td>
+
+
+ <td><?php 
+$select=$obj->selectAllWhere("pro2", "id", '{$row['pro2']}');
+while($row=mysql_fetch_array($select)){ echo $row['name'];}?></td>
+
+
+
+ <td><?php 
+$select=$obj->selectAllWhere("sports", "id", '{$row['sports']}');
+while($row=mysql_fetch_array($select)){ echo $row['name'];}?></td>
+ 
+
+<td><?php 
+$select=$obj->selectAllWhere("social", "id", '{$row['social']}');
+while($row=mysql_fetch_array($select)){ echo $row['name'];}?></td>
+
+
+<td><?php 
+$select=$obj->selectAllWhere("wellfare1", "id", '{$row['wellfare1']}');
+while($row=mysql_fetch_array($select)){ echo $row['name'];}?></td>
+
+
+
+
+<td><?php 
+$select=$obj->selectAllWhere("wellfare2", "id", '{$row['wellfare2']}');
+while($row=mysql_fetch_array($select)){ echo $row['name'];}?></td>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <td>
+	<?php
+	$count=0;
+	if($row['pres']!=""){$count=$count+1;
+	}
+	if($row['vpres']!=""){$count=$count+1;
+	}
+	if($row['gensec']!=""){$count=$count+1;
+	}
+	
+	if($row['assgensec']!=""){$count=$count+1;
+	}
+	if($row['treasurer']!=""){$count=$count+1;
+	}
+	if($row['asstreasurer']!=""){$count=$count+1;
+	}
+	if($row['finsec']!=""){$count=$count+1;
+	}
+	if($row['assfinsec']!=""){$count=$count+1;
+	}
+	if($row['research']!=""){$count=$count+1;
+	}
+	
+	if($row['pro1']!=""){$count=$count+1;
+	}
+	if($row['pro2']!=""){$count=$count+1;
+	}
+	if($row['wellfare1']!=""){$count=$count+1;
+	}
+	if($row['wellfare2']!=""){$count=$count+1;
+	}
+	if($row['social']!=""){$count=$count+1;
+	}
+	if($row['sports']!=""){$count=$count+1;
+	}
+	
+	echo $count;
+	
+	
+	
+	 ?></td>
+ 
+<td><?php echo $row['time'];?></td>
+<td><?php echo $row['ip'];?></td>
+
+   </tr>
+    
+    	<?php }
+
+?>
+
+
+    </table>
+	
+
+ <?php
+ 
+  //paginate result set
+if ($pages > 1) {
+echo '<center>';
+$current_page = ($start/$display) + 1;
+
+if ($current_page != 1) {
+ echo '<center><a href="voted.php?s=' .
+($start - $display) . '&p=' . $pages .
+'">Previous</a></center> ';
+ }
+
+for ($i = 1; $i <= $pages; $i++) {
+ if ($i != $current_page) {
+ echo '<a href="voted.php?s=' .
+(($display * ($i - 1))) . '&p=' .
+$pages . '">' . $i . '</a> ';
+ } else {
+ echo $i . ' ';
+}
+ }
+
+if ($current_page != $pages) {
+ echo '<center><a href="voted.php?s=' .
+($start + $display) . '&p=' . $pages .
+'">Next</a></center>';
+ }
+
+ echo '</center>';// Close the paragraph.
+ 
+ }
+ ?>
+
+
+</body>
+</html>
